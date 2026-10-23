@@ -29,7 +29,6 @@ Re-running `install.sh` is safe. Steps that are already done get skipped. Close 
 | Bottle | Whisky bottle `MTGO`, Windows 10 |
 | Runtime | `winetricks corefonts dotnet48` |
 | Crash fixes | creates `AppData/LocalLow`; turns off audio (`HKCU\Software\Wine\Drivers\Audio=""`); `gdiplus=builtin`; `winegstreamer=disabled` |
-| Rendering | WPF software rendering (`Avalon.Graphics\DisableHWAcceleration=1`) |
 | MTGO | downloads the official `setup.exe` from Daybreak and runs it (ClickOnce install) |
 | **Freeze fix** | the launcher limits MTGO to 2 CPU cores (see below) |
 | Shortcut | `~/Desktop/MTGO.app` → `~/Library/Application Support/MTGO-Launcher/launch.sh` |
