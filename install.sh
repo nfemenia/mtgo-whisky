@@ -101,4 +101,5 @@ fi
 ok "Desktop shortcut: $APP"
 
 echo
-log "Done. Double-click MTGO on your Desktop. After logging in, allow a minute or two for the lobby to load."
+log "Done. Double-click MTGO on your Desktop."
+log "After login MTGO looks frozen on \"Loading Magic Online\" for 2-5 minutes. That is normal: wait it out."

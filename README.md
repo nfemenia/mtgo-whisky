@@ -10,6 +10,8 @@ Sets up Magic: The Gathering Online on an M1/M2/M3 Mac with [Whisky](https://git
 
 Then double-click **MTGO** on the Desktop.
 
+> **After you log in, MTGO looks frozen on *Loading Magic Online* for about 2–5 minutes. That's normal, so wait it out.** See [the freeze section](#the-loading-magic-online-freeze) below.
+
 The first run takes about 20–30 minutes, mostly spent installing .NET 4.8. You may need to:
 
 - click through Whisky's first-launch setup window, which downloads Wine;
@@ -36,7 +38,7 @@ Re-running `install.sh` is safe. Steps that are already done get skipped. Close 
 
 ## The "Loading Magic Online" freeze
 
-Under Wine, MTGO hangs on *Loading Magic Online* right after login and keeps one core at 100%. It takes **both** of these fixes to stop it, and either one alone still freezes:
+Under Wine, MTGO hangs on *Loading Magic Online* right after login and keeps one core at 100%. With the fixes below, that hang becomes a pause of about 2–5 minutes, after which the lobby loads. Without them it never recovers. The fixes:
 
 1. WPF software rendering (`DisableHWAcceleration=1`, applied by `install.sh`).
 2. Limiting MTGO to a few CPU cores ([pauleve/docker-mtgo#160](https://github.com/pauleve/docker-mtgo/issues/160)), done by the launcher as described below.
