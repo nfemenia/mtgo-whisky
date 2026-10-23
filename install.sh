@@ -61,8 +61,9 @@ wineserver -k 2>/dev/null || true
 mkdir -p "$WINEPREFIX/drive_c/users/$USER/AppData/LocalLow"       # MTGO crashes if it is missing
 wine64 reg add 'HKCU\Software\Wine\Drivers' /v Audio /t REG_SZ /d "" /f >/dev/null 2>&1   # no sound: avoids audio crashes
 winetricks -q gdiplus=builtin winegstreamer=disabled >/dev/null 2>&1
-wine64 reg add 'HKCU\Software\Microsoft\Avalon.Graphics' /v DisableHWAcceleration /t REG_DWORD /d 1 /f >/dev/null 2>&1   # WPF software rendering
-ok "Tweaks applied (no audio, builtin gdiplus, no gstreamer, WPF software rendering)"
+# Undo the WPF software-rendering setting from older versions of this script: it slows login a lot.
+wine64 reg delete 'HKCU\Software\Microsoft\Avalon.Graphics' /v DisableHWAcceleration /f >/dev/null 2>&1 || true
+ok "Tweaks applied (no audio, builtin gdiplus, no gstreamer)"
 
 # --- 6. MTGO itself ----------------------------------------------------------------------------
 if [ ! -f "$(appref_unix)" ]; then
@@ -102,4 +103,4 @@ ok "Desktop shortcut: $APP"
 
 echo
 log "Done. Double-click MTGO on your Desktop."
-log "After login MTGO looks frozen on \"Loading Magic Online\" for 2-5 minutes. That is normal: wait it out."
+log "If it pauses on \"Loading Magic Online\" after login, give it a minute."

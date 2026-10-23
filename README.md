@@ -10,7 +10,7 @@ Sets up Magic: The Gathering Online on an M1/M2/M3 Mac with [Whisky](https://git
 
 Then double-click **MTGO** on the Desktop.
 
-> **After you log in, MTGO looks frozen on *Loading Magic Online* for about 2–5 minutes. That's normal, so wait it out.** See [the freeze section](#the-loading-magic-online-freeze) below.
+> If MTGO pauses on *Loading Magic Online* after login, give it a minute before deciding it's frozen. See [the freeze section](#the-loading-magic-online-freeze) below.
 
 The first run takes about 20–30 minutes, mostly spent installing .NET 4.8. You may need to:
 
@@ -31,17 +31,15 @@ Re-running `install.sh` is safe. Steps that are already done get skipped. Close 
 | Bottle | Whisky bottle `MTGO`, Windows 10 |
 | Runtime | `winetricks corefonts dotnet48` |
 | Crash fixes | creates `AppData/LocalLow`; turns off audio (`HKCU\Software\Wine\Drivers\Audio=""`); `gdiplus=builtin`; `winegstreamer=disabled` |
-| Rendering | WPF software rendering (`Avalon.Graphics\DisableHWAcceleration=1`) |
 | MTGO | downloads the official `setup.exe` from Daybreak and runs it (ClickOnce install) |
 | **Freeze fix** | the launcher limits MTGO to 2 CPU cores (see below) |
 | Shortcut | `~/Desktop/MTGO.app` → `~/Library/Application Support/MTGO-Launcher/launch.sh` |
 
 ## The "Loading Magic Online" freeze
 
-Under Wine, MTGO hangs on *Loading Magic Online* right after login and keeps one core at 100%. With the fixes below, that hang becomes a pause of about 2–5 minutes, after which the lobby loads. Without them it never recovers. The fixes:
+Under Wine, MTGO hangs on *Loading Magic Online* right after login and keeps one core at 100%. It never recovers. Limiting MTGO to a few CPU cores fixes this ([pauleve/docker-mtgo#160](https://github.com/pauleve/docker-mtgo/issues/160)). With the limit, the lobby loads within seconds of login.
 
-1. WPF software rendering (`DisableHWAcceleration=1`, applied by `install.sh`).
-2. Limiting MTGO to a few CPU cores ([pauleve/docker-mtgo#160](https://github.com/pauleve/docker-mtgo/issues/160)), done by the launcher as described below.
+Don't turn on WPF software rendering (`Avalon.Graphics\DisableHWAcceleration=1`). It doesn't fix the freeze, and it stretches the post-login pause from a few seconds to over 2 minutes.
 
 macOS has no `taskset`, and Wine ignores `start /affinity`. Wine does pass a process's CPU affinity on to the processes it starts, though. So `src/affinity.cs` (compiled inside the bottle with .NET's `csc.exe`) limits its own affinity and then opens MTGO's ClickOnce shortcut. The ClickOnce service `dfsvc.exe` starts MTGO and passes the limit on. MTGO has to be started from that shortcut, because running `MTGO.exe` directly is refused with "must be launched from the icon". The launcher restarts the bottle's Wine session first. A leftover `dfsvc.exe` would start MTGO without the limit, and stopping only `dfsvc.exe` leaves stale state that breaks the shortcut.
 
