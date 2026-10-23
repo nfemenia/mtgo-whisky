@@ -58,3 +58,15 @@ cd ~/Library/Application\ Support/MTGO-Launcher && source common.sh && bottle_en
 - **MTGO's log:** `find ~/Library/Containers/com.franke.Whisky/Bottles -name mtgo.log -path '*Logs*'`
 - **The bottle isn't in the Whisky app window:** open the sidebar (View → Show Sidebar). The Desktop shortcut doesn't depend on the Whisky window anyway.
 - **No sound:** sound is turned off on purpose, because MTGO's audio crashes under Wine.
+
+## Credits
+
+This project mostly connects other people's work:
+
+- **[pauleve/docker-mtgo](https://github.com/pauleve/docker-mtgo)** by Loïc Paulevé. The Wine tweaks come from its `extra/mtgo.sh`: creating `AppData/LocalLow`, turning off audio, `gdiplus=builtin` and `winegstreamer=disabled`. The CPU-limit fix for the post-login freeze comes from [issue #160](https://github.com/pauleve/docker-mtgo/issues/160) and its `--limit-cpus` option.
+- **[frankea/Whisky](https://github.com/frankea/Whisky)**, the maintained fork of [Whisky](https://github.com/Whisky-App/Whisky) by Isaac Marovitz. It provides the Wine build, bottle management and `WhiskyCmd`.
+- **[Wine](https://www.winehq.org/)**, which runs Windows apps on macOS.
+- **[winetricks](https://github.com/Winetricks/winetricks)**, which installs .NET 4.8 and core fonts and sets the DLL overrides.
+- **[Homebrew](https://brew.sh)**, which installs Whisky and winetricks.
+
+MTGO itself is downloaded from Daybreak Games' official servers and is not redistributed here. This project is not affiliated with Wizards of the Coast or Daybreak Games.
