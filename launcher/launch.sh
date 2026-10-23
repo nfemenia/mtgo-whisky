@@ -8,8 +8,9 @@ bottle_env
 
 mtgo_running && exit 0
 
-# A dfsvc.exe left over from an earlier launch would start MTGO without the CPU limit.
-pkill -f 'dfsvc\.exe' 2>/dev/null; sleep 1
+# Start from a clean Wine session: a dfsvc.exe left over from an earlier launch would start MTGO
+# without the CPU limit, and killing only dfsvc leaves stale COM state that breaks the shortcut.
+wineserver -k 2>/dev/null; wineserver -w 2>/dev/null
 
 cd "$DIR"
 nohup wine64 affinity.exe "${MTGO_CPUS:-3}" "$APPREF_WIN" >"$DIR/launch.log" 2>&1 &

@@ -37,7 +37,7 @@ Re-running `install.sh` is safe. Steps that are already done get skipped. Close 
 
 Under Wine, if MTGO can use every core, it hangs on *Loading Magic Online* right after login and keeps one core at 100%. Limiting it to a few cores fixes this ([pauleve/docker-mtgo#160](https://github.com/pauleve/docker-mtgo/issues/160)).
 
-macOS has no `taskset`, and Wine ignores `start /affinity`. Wine does pass a process's CPU affinity on to the processes it starts, though. So `src/affinity.cs` (compiled inside the bottle with .NET's `csc.exe`) limits its own affinity and then opens MTGO's ClickOnce shortcut. The ClickOnce service `dfsvc.exe` starts MTGO and passes the limit on. MTGO has to be started from that shortcut, because running `MTGO.exe` directly is refused with "must be launched from the icon". The launcher stops any leftover `dfsvc.exe` first, since an old one would start MTGO without the limit.
+macOS has no `taskset`, and Wine ignores `start /affinity`. Wine does pass a process's CPU affinity on to the processes it starts, though. So `src/affinity.cs` (compiled inside the bottle with .NET's `csc.exe`) limits its own affinity and then opens MTGO's ClickOnce shortcut. The ClickOnce service `dfsvc.exe` starts MTGO and passes the limit on. MTGO has to be started from that shortcut, because running `MTGO.exe` directly is refused with "must be launched from the icon". The launcher restarts the bottle's Wine session first. A leftover `dfsvc.exe` would start MTGO without the limit, and stopping only `dfsvc.exe` leaves stale state that breaks the shortcut.
 
 Choose how many cores MTGO gets with `MTGO_CPUS` (a hex mask; the default is `3`, which is 2 cores):
 
